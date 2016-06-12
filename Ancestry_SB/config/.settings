@@ -1,0 +1,19 @@
+{
+    "username": "santoshi.mishra@ancestry.com.dev01", 
+    "environment": "sandbox", 
+    "project_name": "Ancestry_SB", 
+    "workspace": "C:\\Github\\AncestrySB_Master", 
+    "org_url": "", 
+    "namespace": "", 
+    "id": "JJOQCB90UM4LBX7UTN2D7VH2TR7HFPXU", 
+    "metadata_container": "1dc17000000IEtkAAG", 
+    "subscription": [
+        "ApexClass", 
+        "ApexComponent", 
+        "ApexPage", 
+        "ApexTrigger", 
+        "StaticResource", 
+        "CustomObject", 
+        "Profile"
+    ]
+}

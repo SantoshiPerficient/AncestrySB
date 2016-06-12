@@ -1,0 +1,6 @@
+<apex:page contentType="text/plain">
+User-agent: *
+Allow: /
+Allow: /s
+Sitemap: https://ancestry.force.com/CA/sitemapCA
+</apex:page>

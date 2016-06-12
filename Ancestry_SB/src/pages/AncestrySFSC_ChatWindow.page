@@ -1,0 +1,153 @@
+<apex:page sidebar="false" showHeader="false" standardStylesheets="false" applyHtmlTag="false" applyBodyTag="false" docType="html-5.0">       
+    <html lang="en">
+        <head>
+            <meta charset="utf-8"/>
+            <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+            <meta name="viewport" content="width=device-width, initial-scale=1"/>
+            <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+            <!-- Bootstrap -->
+            <apex:stylesheet value="{!URLFOR($Resource.bootstrap336dist, '/css/bootstrap.min.css')}"/>
+            <apex:stylesheet value="{!URLFOR($Resource.lcAncestryAssets, '/css/lc-liveAgent-styles.css')}"/>
+            <apex:includeScript value="{!$Resource.AncestrySFSC_JQueryMin}" />
+            <apex:includeScript value="{!URLFOR($Resource.bootstrap336dist, '/js/bootstrap.min.js')}" />
+            <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+            <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+            <!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+            
+            
+            <style>
+                
+                #waitingMessage { height: 100%; width: 100%; vertical-align: middle; text-align: center; display: none; }
+                
+                
+                #liveAgentClientChat.liveAgentStateWaiting #waitingMessage { display: table; }
+                #liveAgentClientChat.liveAgentStateWaiting .lc-form-search { display: none; }
+                #liveAgentClientChat.liveAgentStateEnded .lc-form-search { display: none; }
+                #liveAgentChatLog {
+                border: 0px;
+                }
+                
+                #liveAgentChatLogText .client,  #liveAgentChatLogText .client + .timestamp {
+                text-align: right;
+                }
+                /*
+                #liveAgentChatLogText .operator .name {
+                display:none;
+                }
+                #liveAgentChatLogText .client .name {
+                display:none;
+                }
+                */
+                
+.lc-form-search {
+    bottom: 0;
+    margin: 0 20px 15px;
+    position: relative;
+}
+
+            </style>
+        </head>
+        <body>
+            <div class="container lc-liveChat-chat">
+                <div class="panel panel-default">
+                    <!-- <div class="panel-heading">Chat Window
+<button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
+</div>
+-->
+                    <div class="panel-body">
+                        <div class="lc-AncestryLogo"><img alt="Ancestry logo" src="http://c.mfcreative.com/i/logo/ancestry.svg" /></div><h2 class="lc-liveChat-icon"><span class="htmlEntity"></span>Live Chat </h2>
+                        
+                        <liveAgent:clientchat >
+                            
+                            <div class="row">
+                                <div class="lc-chat-window">
+                                    <liveAgent:clientChatAlertMessage />
+                                    <liveAgent:clientChatStatusMessage />
+                                    <table id="waitingMessage" cellpadding="0" cellspacing="0">
+                                        <tr>
+                                            <td>Please wait while you are connected to an available agent.</td>
+                                        </tr>
+                                    </table>
+                                    <liveAgent:clientChatLog showTimeStamp="true" />
+
+                                    
+                                </div>
+                                    <div class="lc-form-search">
+                                        <liveagent:clientChatInput />
+                                        <liveAgent:clientChatFileTransfer fileTransferSendFileLabel="Send File" fileTransferCanceledLabel="Cancel" fileTransferSuccessfulLabel="Your File has been transfered."/>
+                                        <liveAgent:clientChatSendButton label="Send"/>
+                                    </div>  
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12 text-left">
+                                    <liveAgent:clientChatSaveButton label="Save Chat" />
+                                    <liveAgent:clientChatEndButton label="End Chat" />
+                                </div>
+                            </div>
+                        </liveAgent:clientchat>
+                    </div>
+                </div>
+            </div>
+            
+        </body>
+        <script>
+        $( document ).ready(function() {
+            $('#liveAgentChatInput').removeClass('liveAgentChatInput');
+            $('#liveAgentChatInput').addClass('form-control');
+            $('.liveAgentSaveButton').addClass('btn btn-primary lc-btnGreen margin-right10');
+            $('.liveAgentEndButton').addClass('btn btn-primary lc-btnGray');  
+            $('.liveAgentSendButton').addClass('btn btn-default lc-btnGreen');  
+            
+        });
+        MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
+        
+        var observer = new MutationObserver(function(mutations, observer) {
+            // fired when a mutation occurs
+            for (var i = mutations.length - 1; i >= 0; i--) {
+                
+                if (mutations[i].target.id == 'liveAgentChatLogText') {
+                    handleNewChatItem(mutations[i]);
+                    /* var scrollHeight = $("#liveAgentChatLog").get(0).scrollHeight;
+                    if(scrollHeight>240){         
+                        $("html, body").animate({ scrollTop: scrollHeight }, 40);
+                    }*/
+                }
+            };
+        }); 
+        // define what element should be observed by the observer
+        // and what types of mutations trigger the callback
+        observer.observe(document, {
+            subtree: true,
+            attributes: true,
+            childList: true,
+            characterData: true,
+            attributeOldValue: true,
+            characterDataOldValue: true
+        }); 
+        
+        function handleNewChatItem(mutation){
+            $('span .timestamp').each(function( index, value ) {
+                var timeWithSecond = $(this).text();
+                var timeWithOutSecond = parseTimeStamp(timeWithSecond)
+                $(this).text(timeWithOutSecond);
+            });
+        }    
+        
+        function parseTimeStamp(timeWithSecond){
+            
+            var pattenStr = new RegExp("[:]|[\\s]","g");
+            var arrPatten = timeWithSecond.split(pattenStr);
+            if(arrPatten.length==4){
+                timeWithoutSecond = arrPatten[0]+":" +arrPatten[1]+" "+arrPatten[3];  
+            }
+            return timeWithoutSecond;
+        }
+        
+        </script>
+        
+    </html>
+    
+</apex:page>
