@@ -1,0 +1,53 @@
+<apex:page standardcontroller="Case" extensions="AncestrySFSC_CaseCommentExtension" showHeader="false">
+        
+        <apex:includeScript value="/support/console/26.0/integration.js"/>
+         <script type='text/javascript' src='/canvas/sdk/js/publisher.js'/>  
+        <script src="/soap/ajax/27.0/connection.js" />         
+        <script type="text/javascript">
+      var refreshPrimaryTab = function showTabId(result) {
+        var tabId = result.id;
+        sforce.console.refreshPrimaryTabById(tabId, true);
+    };
+
+    function doPrimaryTabRefresh() {
+        sforce.console.getEnclosingPrimaryTabId(refreshPrimaryTab);            
+    }
+
+    doPrimaryTabRefresh();
+
+  </script>
+
+    <div>
+
+        <apex:form >
+
+                         <apex:actionStatus id="CaseComment">
+                    <apex:facet name="stop">
+                        <apex:Commandbutton value="Save" status="CaseComment" action="{!addComment}" rerender="out" style="position:fixed; bottom:0px; right:2px; padding: 5px 10px; font-size:13px;"
+                        oncomplete="Sfdc.canvas.publisher.publish(
+                        {name : 'publisher.refresh',  payload :
+                        {feed: true, objectRelatedLists: {}}}); doPrimaryTabRefresh()"/>      
+                                      
+                    </apex:facet>
+                    
+                    <apex:facet name="start">
+                        <apex:outputPanel >                                
+                            <apex:Commandbutton value="Saving..." status="CaseComment" action="{!addComment}" rerender="out" style="position:fixed; bottom:0px; right:2px; padding: 5px 10px; font-size:13px;"
+                            oncomplete="Sfdc.canvas.publisher.publish(
+                            {name : 'publisher.refresh',  payload :
+                            {feed: true, objectRelatedLists: {}}}); doPrimaryTabRefresh()"/>
+                        </apex:outputPanel>
+                    </apex:facet>                       
+                </apex:actionStatus>  
+
+            <apex:outputPanel id="out" >
+
+                <apex:inputField value="{!comment.commentbody}" Label="Reason for Escalation" style="width:98%; height:160px;" />
+            
+            </apex:outputPanel>
+
+        </apex:form><br />
+
+    </div>             
+
+</apex:page>

@@ -1,0 +1,19 @@
+<apex:page controller="AncestrySFSC_EmptyCategoryArticleCtr">
+    
+    <apex:dataTable value="{!articleCategoryMap}" var="fieldKey" id="theTable" rowClasses="odd,even" styleClass="tableClass" border="1">
+        <apex:column width="200">
+            <apex:facet name="header">Article Id</apex:facet>
+            <apex:outputText value="{!fieldKey}"/>
+        </apex:column>
+        <apex:column width="130">
+            <apex:facet name="header">Category Name</apex:facet>
+            <apex:outputPanel rendered="{!articleCategoryMap[fieldKey]!=null}">
+                <apex:repeat value="{!articleCategoryMap[fieldKey]}" var="fieldValue" >
+                    <apex:outputText value="{!fieldValue}"/><br/>
+                </apex:repeat>
+            </apex:outputPanel>
+        </apex:column>
+        
+    </apex:dataTable>
+    
+</apex:page>
